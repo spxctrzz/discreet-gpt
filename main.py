@@ -6,6 +6,7 @@ from tkinter import messagebox
 import time
 import json
 from colorama import Fore
+from plyer import notification
 
 convo = []
 
@@ -30,7 +31,6 @@ def call(content):
     for chunk in completion:
         response += chunk.choices[0].delta.content or ""
 
-    print(Fore.LIGHTYELLOW_EX + f"You:\n{response}" + Fore.RESET)
     convo.append({"role": "assistant", "content": response})
 
     if response is not None:
@@ -48,6 +48,7 @@ def on_press():
     time.sleep(0.1)
     if active:
         content = pyperclip.paste()
+        print(Fore.LIGHTYELLOW_EX + f"\nYou:\n{content}" + Fore.RESET)
         call(content)
     else:
         return
@@ -57,18 +58,16 @@ def change_mode():
     time.sleep(0.1)
     if active == False:
         active = True
-        root = tk.Tk()
-        root.withdraw()  
-        root.attributes('-topmost', True)  
-        messagebox.showinfo('Schoollama Enabled', 'Schoollama Copy-Paste Enabled\n[ctrl+shift+x] to Disable')
-        root.destroy()
+        notification.notify(
+            title = "🟢 Enabled",
+            message= "Magic AI Copy-Paste Enabled\n[alt+x] to Disable",
+            timeout=1)
     else:
         active = False
-        root = tk.Tk()
-        root.withdraw()  
-        root.attributes('-topmost', True)  
-        messagebox.showinfo('Schoollama Disabled', 'Schoollama Copy-Paste Disabled\n[ctrl+shift+x] to Re-Enable')
-        root.destroy()
+        notification.notify(
+            title = "🔴 Disabled",
+            message= "Magic AI Copy-Paste Disabled\n[alt+x] to Disable",
+            timeout=1)
 
     print(active)
 
